@@ -428,15 +428,20 @@ Transformer最早在[《Attention is all you need》](https://arxiv.org/abs/1706
 
 而对于所有 $T$ 个元素的上下文向量： $$z=W\cdot x$$
 
-其中， $z=\begin{bmatrix}z^{(1)}\\z^{(2)}\\\cdots\\z^{(T)}\end{bmatrix}$ ， $W$ 为注意力权重矩阵，第 $ i $ 行第 $j $ 列为 $\alpha_{ij}$ ， $x=\begin{bmatrix}x^{(1)}\\x^{(2)}\\\cdots\\x^{(T)}\end{bmatrix}$ 。
+其中， $`z=\begin{bmatrix}z^{(1)}\\z^{(2)}\\\cdots\\z^{(T)}\end{bmatrix}`$ ， $`W`$ 为注意力权重矩阵，第 $` i `$ 行第 $`j `$ 列为 $`\alpha_{ij}`$ ， $`x=\begin{bmatrix}x^{(1)}\\x^{(2)}\\\cdots\\x^{(T)}\end{bmatrix}`$ 。
 
 ### 实现带可训练权重的自注意力机制
 
-而在Transformer中，注意力权重是可以学习的。通过引入3个可训练的参数矩阵 $W_q$ 、 $W_k $ 和 $W_v $ ，将输入词元 $x^{(i)}$ 分别映射为查询向量 $q^{(i)}$ 、键向量 $k^{(i)}$ 和值向量 $v^{(i)}$ ： $$q=W_q\cdot x$$$$k=W_k\cdot x$$
+而在Transformer中，注意力权重是可以学习的。通过引入3个可训练的参数矩阵 $`W_q`$ 、 $`W_k `$ 和 $`W_v `$ ，
+将输入词元 $`x^{(i)}`$ 分别映射为查询向量 $`q^{(i)}`$ 、键向量 $`k^{(i)}`$ 和值向量 $`v^{(i)}`$ ： 
 
-$$v=W_v\cdot x$$
+$`q=W_q\cdot x`$
 
-其中， $q=\begin{bmatrix}q^{(1)}\\q^{(2)}\\\cdots\\q^{(T)}\end{bmatrix}$ ， $k=\begin{bmatrix}k^{(1)}\\k^{(2)}\\\cdots\\k^{(T)}\end{bmatrix}$ ， $v=\begin{bmatrix}v^{(1)}\\v^{(2)}\\\cdots\\v^{(T)}\end{bmatrix}$ 。
+$`k=W_k\cdot x`$
+
+$`v=W_v\cdot x`$
+
+其中， $`q=\begin{bmatrix}q^{(1)}\\q^{(2)}\\\cdots\\q^{(T)}\end{bmatrix}`$ ， $`k=\begin{bmatrix}k^{(1)}\\k^{(2)}\\\cdots\\k^{(T)}\end{bmatrix}`$ ， $`v=\begin{bmatrix}v^{(1)}\\v^{(2)}\\\cdots\\v^{(T)}\end{bmatrix}`$ 。
 
 仍是以 $z^{(2)}$ 为例，如图15所示，先通过查询向量和键向量点积得到注意力得分，即 $$w_{2i}=q^{(2)}\cdot k^{(i)}$$再通过Softmax函数对注意力得分进行归一化得到注意力权重，注意这里在对注意力得分进行归一化之前会先除以维度的平方根进行缩放，避免梯度过小，从而提升训练性能，这一技巧源自Transformer的论文，也是缩放点积注意力中“缩放点积”的由来： $$\alpha_{2i}=\frac{e^{w_{2i}/\sqrt{d}}}{\sum_{j=1}^T{e^{w_{2j}/\sqrt{d}}}}$$对值向量按注意力权重进行加权求和得到上下文向量：
 
